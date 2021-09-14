@@ -11,7 +11,8 @@ class Constants {
         const val CALENDAR_PROJECTION_OWNER_ACCOUNT_INDEX: Int = 4
         const val CALENDAR_PROJECTION_ACCESS_LEVEL_INDEX: Int = 5
         const val CALENDAR_PROJECTION_COLOR_INDEX: Int = 6
-        const val CALENDAR_PROJECTION_IS_PRIMARY_INDEX: Int = 7
+        const val CALENDAR_PROJECTION_VISIBLE_INDEX: Int = 7
+        const val CALENDAR_PROJECTION_IS_PRIMARY_INDEX: Int = 8
 
         // API 17 or higher
         val CALENDAR_PROJECTION: Array<String> = arrayOf(
@@ -22,7 +23,8 @@ class Constants {
                 CalendarContract.Calendars.OWNER_ACCOUNT,                 // 4
                 CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL,         // 5
                 CalendarContract.Calendars.CALENDAR_COLOR,                // 6
-                CalendarContract.Calendars.IS_PRIMARY                     // 7
+                CalendarContract.Calendars.VISIBLE,                       // 7
+                CalendarContract.Calendars.IS_PRIMARY                     // 8
 
         )
 
@@ -34,24 +36,28 @@ class Constants {
                 CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 3
                 CalendarContract.Calendars.OWNER_ACCOUNT,                 // 4
                 CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL,         // 5
-                CalendarContract.Calendars.CALENDAR_COLOR                 // 6
+                CalendarContract.Calendars.CALENDAR_COLOR,                // 6
+                CalendarContract.Calendars.VISIBLE                        // 7
         )
 
         const val EVENT_PROJECTION_ID_INDEX: Int = 0
-        const val EVENT_PROJECTION_TITLE_INDEX: Int = 1
-        const val EVENT_PROJECTION_DESCRIPTION_INDEX: Int = 2
-        const val EVENT_PROJECTION_BEGIN_INDEX: Int = 3
-        const val EVENT_PROJECTION_END_INDEX: Int = 4
-        const val EVENT_PROJECTION_RECURRING_RULE_INDEX: Int = 7
-        const val EVENT_PROJECTION_ALL_DAY_INDEX: Int = 8
-        const val EVENT_PROJECTION_EVENT_LOCATION_INDEX: Int = 9
-        const val EVENT_PROJECTION_CUSTOM_APP_URI_INDEX: Int = 10
-        const val EVENT_PROJECTION_START_TIMEZONE_INDEX: Int = 11
-        const val EVENT_PROJECTION_END_TIMEZONE_INDEX: Int = 12
-        const val EVENT_PROJECTION_AVAILABILITY_INDEX: Int = 13
+        const val EVENT_PROJECTION_SYNC_ID_INDEX: Int = 1
+        const val EVENT_PROJECTION_TITLE_INDEX: Int = 2
+        const val EVENT_PROJECTION_DESCRIPTION_INDEX: Int = 3
+        const val EVENT_PROJECTION_BEGIN_INDEX: Int = 4
+        const val EVENT_PROJECTION_END_INDEX: Int = 5
+        const val EVENT_PROJECTION_RECURRING_RULE_INDEX: Int = 6
+        const val EVENT_PROJECTION_ALL_DAY_INDEX: Int = 7
+        const val EVENT_PROJECTION_EVENT_LOCATION_INDEX: Int = 8
+        const val EVENT_PROJECTION_CUSTOM_APP_URI_INDEX: Int = 9
+        const val EVENT_PROJECTION_START_TIMEZONE_INDEX: Int = 10
+        const val EVENT_PROJECTION_END_TIMEZONE_INDEX: Int = 11
+        const val EVENT_PROJECTION_AVAILABILITY_INDEX: Int = 12
+        const val EVENT_PROJECTION_DELETED_INDEX: Int = 13
 
         val EVENT_PROJECTION: Array<String> = arrayOf(
                 CalendarContract.Instances.EVENT_ID,
+                CalendarContract.Events._SYNC_ID,
                 CalendarContract.Events.TITLE,
                 CalendarContract.Events.DESCRIPTION,
                 CalendarContract.Instances.BEGIN,
@@ -64,7 +70,8 @@ class Constants {
                 CalendarContract.Events.CUSTOM_APP_URI,
                 CalendarContract.Events.EVENT_TIMEZONE,
                 CalendarContract.Events.EVENT_END_TIMEZONE,
-                CalendarContract.Events.AVAILABILITY
+                CalendarContract.Events.AVAILABILITY,
+                CalendarContract.Events.DELETED
         )
 
         const val EVENT_INSTANCE_DELETION_ID_INDEX: Int = 0

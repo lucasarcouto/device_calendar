@@ -4,6 +4,7 @@ package com.builttoroam.devicecalendar.models
 class Event {
     var title: String? = null
     var eventId: String? = null
+    var eventSyncId: String? = null
     var calendarId: String? = null
     var description: String? = null
     var start: Long? = null
@@ -18,4 +19,5 @@ class Event {
     var organizer: Attendee? = null
     var reminders: MutableList<Reminder> = mutableListOf()
     var availability: Availability? = null
+    var deleted: String? = null
 }

@@ -682,8 +682,9 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         val calendarColor = cursor.getInt(CALENDAR_PROJECTION_COLOR_INDEX)
         val accountName = cursor.getString(CALENDAR_PROJECTION_ACCOUNT_NAME_INDEX)
         val accountType = cursor.getString(CALENDAR_PROJECTION_ACCOUNT_TYPE_INDEX)
+        val visible = cursor.getString(CALENDAR_PROJECTION_VISIBLE_INDEX)
 
-        val calendar = Calendar(calId.toString(), displayName, calendarColor, accountName, accountType)
+        val calendar = Calendar(calId.toString(), displayName, calendarColor, accountName, accountType, visible)
         calendar.isReadOnly = isCalendarReadOnly(accessLevel)
         if (atLeastAPI(17)) {
             val isPrimary = cursor.getString(CALENDAR_PROJECTION_IS_PRIMARY_INDEX)
@@ -700,6 +701,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         }
 
         val eventId = cursor.getLong(EVENT_PROJECTION_ID_INDEX)
+        val eventSyncId = cursor.getString(EVENT_PROJECTION_SYNC_ID_INDEX)
         val title = cursor.getString(EVENT_PROJECTION_TITLE_INDEX)
         val description = cursor.getString(EVENT_PROJECTION_DESCRIPTION_INDEX)
         val begin = cursor.getLong(EVENT_PROJECTION_BEGIN_INDEX)
@@ -711,10 +713,12 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         val startTimeZone = cursor.getString(EVENT_PROJECTION_START_TIMEZONE_INDEX)
         val endTimeZone = cursor.getString(EVENT_PROJECTION_END_TIMEZONE_INDEX)
         val availability = parseAvailability(cursor.getInt(EVENT_PROJECTION_AVAILABILITY_INDEX))
+        val deleted = cursor.getString(EVENT_PROJECTION_DELETED_INDEX)
 
         val event = Event()
         event.title = title ?: "New Event"
         event.eventId = eventId.toString()
+        event.eventSyncId = eventSyncId
         event.calendarId = calendarId
         event.description = description
         event.start = begin
@@ -726,6 +730,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         event.startTimeZone = startTimeZone
         event.endTimeZone = endTimeZone
         event.availability = availability
+        event.deleted = deleted
 
         return event
     }

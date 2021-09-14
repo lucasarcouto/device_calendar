@@ -11,6 +11,9 @@ class Event {
   /// Read-only. The unique identifier for this event. This is auto-generated when a new event is created
   String? eventId;
 
+  /// Read-only. The unique identifier for this event after it was synced with Google servers
+  String? eventSyncId;
+
   /// Read-only. The identifier of the calendar that this event is associated with
   String? calendarId;
 
@@ -47,8 +50,12 @@ class Event {
   /// Indicates if this event counts as busy time, tentative, unavaiable or is still free time
   late Availability availability;
 
+  /// Indicates whether the row has been deleted but not synced to the server. A deleted row should be ignored.
+  late String? deleted;
+
   Event(this.calendarId,
       {this.eventId,
+      this.eventSyncId,
       this.title,
       this.start,
       this.end,
@@ -59,7 +66,8 @@ class Event {
       required this.availability,
       this.location,
       this.url,
-      this.allDay = false});
+      this.allDay = false,
+      this.deleted});
 
   Event.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -67,6 +75,7 @@ class Event {
     }
 
     eventId = json['eventId'];
+    eventSyncId = json['eventSyncId'];
     calendarId = json['calendarId'];
     title = json['title'];
     description = json['description'];
@@ -90,6 +99,7 @@ class Event {
     allDay = json['allDay'];
     location = json['location'];
     availability = parseStringToAvailability(json['availability']);
+    deleted = json['deleted'];
 
     var foundUrl = json['url']?.toString();
     if (foundUrl?.isEmpty ?? true) {
@@ -134,6 +144,7 @@ class Event {
 
     data['calendarId'] = calendarId;
     data['eventId'] = eventId;
+    data['eventSyncId'] = eventSyncId;
     data['eventTitle'] = title;
     data['eventDescription'] = description;
     data['eventStartDate'] = start!.millisecondsSinceEpoch;
@@ -144,6 +155,7 @@ class Event {
     data['eventLocation'] = location;
     data['eventURL'] = url?.data?.contentText;
     data['availability'] = availability.enumToString;
+    data['deleted'] = deleted;
 
     if (attendees != null) {
       data['attendees'] = attendees?.map((a) => a?.toJson()).toList();

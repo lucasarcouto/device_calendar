@@ -21,6 +21,9 @@ class Calendar {
   // Read-only. Account type associated with the calendar
   String? accountType;
 
+  // Read-only. Is the calendar selected to be displayed? 0 - do not show events associated with this calendar. 1 - show events associated with this calendar
+  String? visible;
+
   Calendar(
       {this.id,
       this.name,
@@ -28,7 +31,8 @@ class Calendar {
       this.isDefault,
       this.color,
       this.accountName,
-      this.accountType});
+      this.accountType,
+      this.visible});
 
   Calendar.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -38,6 +42,7 @@ class Calendar {
     color = json['color'];
     accountName = json['accountName'];
     accountType = json['accountType'];
+    visible = json['visible'];
   }
 
   Map<String, dynamic> toJson() {
@@ -48,7 +53,8 @@ class Calendar {
       'isDefault': isDefault,
       'color': color,
       'accountName': accountName,
-      'accountType': accountType
+      'accountType': accountType,
+      'visible': visible
     };
 
     return data;

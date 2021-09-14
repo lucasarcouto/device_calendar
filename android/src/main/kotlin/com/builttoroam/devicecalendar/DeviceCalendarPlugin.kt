@@ -32,6 +32,7 @@ class DeviceCalendarPlugin() : MethodCallHandler {
     private val END_DATE_ARGUMENT = "endDate"
     private val EVENT_IDS_ARGUMENT = "eventIds"
     private val EVENT_ID_ARGUMENT = "eventId"
+    private val EVENT_SYNC_ID_ARGUMENT = "eventSyncId"
     private val EVENT_TITLE_ARGUMENT = "eventTitle"
     private val EVENT_LOCATION_ARGUMENT = "eventLocation"
     private val EVENT_URL_ARGUMENT = "eventURL"
@@ -59,6 +60,7 @@ class DeviceCalendarPlugin() : MethodCallHandler {
     private val CALENDAR_COLOR_ARGUMENT = "calendarColor"
     private val LOCAL_ACCOUNT_NAME_ARGUMENT = "localAccountName"
     private val EVENT_AVAILABILITY_ARGUMENT = "availability"
+    private val EVENT_DELETED_ARGUMENT = "deleted"
 
 
     private lateinit var _registrar: Registrar
@@ -146,6 +148,7 @@ class DeviceCalendarPlugin() : MethodCallHandler {
         event.title = call.argument<String>(EVENT_TITLE_ARGUMENT)
         event.calendarId = calendarId
         event.eventId = call.argument<String>(EVENT_ID_ARGUMENT)
+        event.eventSyncId = call.argument<String>(EVENT_SYNC_ID_ARGUMENT)
         event.description = call.argument<String>(EVENT_DESCRIPTION_ARGUMENT)
         event.allDay = call.argument<Boolean>(EVENT_ALL_DAY_ARGUMENT) ?: false
         event.start = call.argument<Long>(EVENT_START_DATE_ARGUMENT)!!
@@ -155,6 +158,7 @@ class DeviceCalendarPlugin() : MethodCallHandler {
         event.location = call.argument<String>(EVENT_LOCATION_ARGUMENT)
         event.url = call.argument<String>(EVENT_URL_ARGUMENT)
         event.availability = parseAvailability(call.argument<String>(EVENT_AVAILABILITY_ARGUMENT))
+        event.deleted = call.argument<String>(EVENT_DELETED_ARGUMENT)
 
         if (call.hasArgument(RECURRENCE_RULE_ARGUMENT) && call.argument<Map<String, Any>>(RECURRENCE_RULE_ARGUMENT) != null) {
             val recurrenceRule = parseRecurrenceRuleArgs(call)

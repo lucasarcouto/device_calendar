@@ -80,7 +80,7 @@ class Event {
     title = json['title'];
     description = json['description'];
 
-    final int? startTimestamp = json['eventStartDate'];
+    final int? startTimestamp = json['start'];
     final String? startLocationName = json['startTimeZone'];
     var startTimeZone = timeZoneDatabase.locations[startLocationName];
     startTimeZone ??= local;
@@ -88,7 +88,7 @@ class Event {
         ? TZDateTime.fromMillisecondsSinceEpoch(startTimeZone, startTimestamp)
         : TZDateTime.now(local);
 
-    final int? endTimestamp = json['eventEndDate'];
+    final int? endTimestamp = json['end'];
     final String? endLocationName = json['endTimeZone'];
     var endLocation = timeZoneDatabase.locations[endLocationName];
     endLocation ??= local;

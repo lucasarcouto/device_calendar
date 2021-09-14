@@ -717,8 +717,6 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         val availability = parseAvailability(cursor.getInt(EVENT_PROJECTION_AVAILABILITY_INDEX))
         val deleted = cursor.getString(EVENT_PROJECTION_DELETED_INDEX)
 
-        println("<debug> begin: ${cursor.getLong(EVENT_PROJECTION_BEGIN_INDEX)}")
-
         val event = Event()
         event.title = title ?: "New Event"
         event.eventId = eventId.toString()

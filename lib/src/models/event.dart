@@ -50,6 +50,9 @@ class Event {
   /// Indicates if this event counts as busy time, tentative, unavaiable or is still free time
   late Availability availability;
 
+  /// A secondary color for the individual event.
+  late String? color;
+
   /// Indicates whether the row has been deleted but not synced to the server. A deleted row should be ignored.
   late String? deleted;
 
@@ -67,6 +70,7 @@ class Event {
       this.location,
       this.url,
       this.allDay = false,
+      this.color,
       this.deleted});
 
   Event.fromJson(Map<String, dynamic>? json) {
@@ -99,6 +103,7 @@ class Event {
     allDay = json['allDay'];
     location = json['location'];
     availability = parseStringToAvailability(json['availability']);
+    color = json['color'];
     deleted = json['deleted'];
 
     var foundUrl = json['url']?.toString();
@@ -155,7 +160,7 @@ class Event {
     data['eventLocation'] = location;
     data['eventURL'] = url?.data?.contentText;
     data['availability'] = availability.enumToString;
-    data['deleted'] = deleted;
+    data['color'] = color;
 
     if (attendees != null) {
       data['attendees'] = attendees?.map((a) => a?.toJson()).toList();

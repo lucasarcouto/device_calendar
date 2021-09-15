@@ -60,6 +60,7 @@ class DeviceCalendarPlugin() : MethodCallHandler {
     private val CALENDAR_COLOR_ARGUMENT = "calendarColor"
     private val LOCAL_ACCOUNT_NAME_ARGUMENT = "localAccountName"
     private val EVENT_AVAILABILITY_ARGUMENT = "availability"
+    private val EVENT_COLOR_ARGUMENT = "color"
     private val EVENT_DELETED_ARGUMENT = "deleted"
 
 
@@ -158,6 +159,7 @@ class DeviceCalendarPlugin() : MethodCallHandler {
         event.location = call.argument<String>(EVENT_LOCATION_ARGUMENT)
         event.url = call.argument<String>(EVENT_URL_ARGUMENT)
         event.availability = parseAvailability(call.argument<String>(EVENT_AVAILABILITY_ARGUMENT))
+        event.color = call.argument<String>(EVENT_COLOR_ARGUMENT)
         event.deleted = call.argument<String>(EVENT_DELETED_ARGUMENT)
 
         if (call.hasArgument(RECURRENCE_RULE_ARGUMENT) && call.argument<Map<String, Any>>(RECURRENCE_RULE_ARGUMENT) != null) {

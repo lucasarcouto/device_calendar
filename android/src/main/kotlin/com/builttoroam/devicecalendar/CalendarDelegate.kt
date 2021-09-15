@@ -686,7 +686,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         val accountType = cursor.getString(CALENDAR_PROJECTION_ACCOUNT_TYPE_INDEX)
         val visible = cursor.getString(CALENDAR_PROJECTION_VISIBLE_INDEX)
 
-        val calendar = Calendar(calId.toString(), displayName, calendarColor, accountName, accountType)
+        val calendar = Calendar(calId.toString(), displayName, calendarColor, accountName, accountType, visible)
         calendar.isReadOnly = isCalendarReadOnly(accessLevel)
         if (atLeastAPI(17)) {
             val isPrimary = cursor.getString(CALENDAR_PROJECTION_IS_PRIMARY_INDEX)

@@ -716,6 +716,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         val startTimeZone = cursor.getString(EVENT_PROJECTION_START_TIMEZONE_INDEX)
         val endTimeZone = cursor.getString(EVENT_PROJECTION_END_TIMEZONE_INDEX)
         val availability = parseAvailability(cursor.getInt(EVENT_PROJECTION_AVAILABILITY_INDEX))
+        val color = cursor.getString(EVENT_PROJECTION_EVENT_COLOR_INDEX)
         val deleted = cursor.getString(EVENT_PROJECTION_DELETED_INDEX)
 
         val event = Event()
@@ -733,6 +734,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         event.startTimeZone = startTimeZone
         event.endTimeZone = endTimeZone
         event.availability = availability
+        event.color = color
         event.deleted = deleted
 
         return event

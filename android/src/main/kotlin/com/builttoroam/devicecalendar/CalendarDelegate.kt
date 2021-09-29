@@ -682,6 +682,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
 
         val calId = cursor.getLong(CALENDAR_PROJECTION_ID_INDEX)
         val calSyncId = cursor.getString(CALENDAR_PROJECTION_SYNC_ID_INDEX)
+        if (calSyncId == null) calSyncId = ""
         val displayName = cursor.getString(CALENDAR_PROJECTION_DISPLAY_NAME_INDEX)
         val accessLevel = cursor.getInt(CALENDAR_PROJECTION_ACCESS_LEVEL_INDEX)
         val calendarColor = cursor.getInt(CALENDAR_PROJECTION_COLOR_INDEX)

@@ -29,6 +29,7 @@ import com.builttoroam.devicecalendar.common.Constants.Companion.CALENDAR_PROJEC
 import com.builttoroam.devicecalendar.common.Constants.Companion.CALENDAR_PROJECTION_COLOR_INDEX
 import com.builttoroam.devicecalendar.common.Constants.Companion.CALENDAR_PROJECTION_DISPLAY_NAME_INDEX
 import com.builttoroam.devicecalendar.common.Constants.Companion.CALENDAR_PROJECTION_ID_INDEX
+import com.builttoroam.devicecalendar.common.Constants.Companion.CALENDAR_PROJECTION_SYNC_ID_INDEX
 import com.builttoroam.devicecalendar.common.Constants.Companion.CALENDAR_PROJECTION_VISIBLE_INDEX
 import com.builttoroam.devicecalendar.common.Constants.Companion.CALENDAR_PROJECTION_IS_PRIMARY_INDEX
 import com.builttoroam.devicecalendar.common.Constants.Companion.CALENDAR_PROJECTION_OLDER_API
@@ -349,7 +350,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
 
             GlobalScope.launch(Dispatchers.IO + exceptionHandler) {
                 while (eventsCursor?.moveToNext() == true) {
-                    val event = parseEvent(calendarId, eventsCursor) ?: continue
+                    val event = parseEvent(calendarId, calendar.syncId, eventsCursor) ?: continue
                     events.add(event)
                 }
                 for (event in events) {
@@ -680,6 +681,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         }
 
         val calId = cursor.getLong(CALENDAR_PROJECTION_ID_INDEX)
+        val calSyncId = cursor.getString(CALENDAR_PROJECTION_SYNC_ID_INDEX)
         val displayName = cursor.getString(CALENDAR_PROJECTION_DISPLAY_NAME_INDEX)
         val accessLevel = cursor.getInt(CALENDAR_PROJECTION_ACCESS_LEVEL_INDEX)
         val calendarColor = cursor.getInt(CALENDAR_PROJECTION_COLOR_INDEX)
@@ -687,7 +689,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         val accountType = cursor.getString(CALENDAR_PROJECTION_ACCOUNT_TYPE_INDEX)
         val visible = cursor.getString(CALENDAR_PROJECTION_VISIBLE_INDEX)
 
-        val calendar = Calendar(calId.toString(), displayName, calendarColor, accountName, accountType, visible)
+        val calendar = Calendar(calId.toString(), calSyncId, displayName, calendarColor, accountName, accountType, visible)
         calendar.isReadOnly = isCalendarReadOnly(accessLevel)
         if (atLeastAPI(17)) {
             val isPrimary = cursor.getString(CALENDAR_PROJECTION_IS_PRIMARY_INDEX)
@@ -698,7 +700,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         return calendar
     }
 
-    private fun parseEvent(calendarId: String, cursor: Cursor?): Event? {
+    private fun parseEvent(calendarId: String, calendarSyncId: String, cursor: Cursor?): Event? {
         if (cursor == null) {
             return null
         }
@@ -724,6 +726,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         event.eventId = eventId.toString()
         event.eventSyncId = eventSyncId
         event.calendarId = calendarId
+        event.calendarSyncId = calendarSyncId
         event.description = description
         event.start = begin
         event.end = end

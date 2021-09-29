@@ -6,6 +6,7 @@ class Event {
     var eventId: String? = null
     var eventSyncId: String? = null
     var calendarId: String? = null
+    var calendarSyncId: String? = null
     var description: String? = null
     var start: Long? = null
     var end: Long? = null

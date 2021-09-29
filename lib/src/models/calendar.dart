@@ -3,6 +3,9 @@ class Calendar {
   /// Read-only. The unique identifier for this calendar
   String? id;
 
+  /// Read-only. The unique ID for a row assigned by the sync source.
+  String? syncId;
+
   /// The name of this calendar
   String? name;
 
@@ -26,6 +29,7 @@ class Calendar {
 
   Calendar(
       {this.id,
+      this.syncId,
       this.name,
       this.isReadOnly,
       this.isDefault,
@@ -36,6 +40,7 @@ class Calendar {
 
   Calendar.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    syncId = json['syncId'];
     name = json['name'];
     isReadOnly = json['isReadOnly'];
     isDefault = json['isDefault'];
@@ -48,6 +53,7 @@ class Calendar {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{
       'id': id,
+      'syncId': syncId,
       'name': name,
       'isReadOnly': isReadOnly,
       'isDefault': isDefault,

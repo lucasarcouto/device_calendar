@@ -17,6 +17,9 @@ class Event {
   /// Read-only. The identifier of the calendar that this event is associated with
   String? calendarId;
 
+  /// Read-only. The unique identifier for this event after it was synced with Google servers
+  String? calendarSyncId;
+
   /// The title of this event
   String? title;
 
@@ -59,6 +62,7 @@ class Event {
   Event(this.calendarId,
       {this.eventId,
       this.eventSyncId,
+      this.calendarSyncId,
       this.title,
       this.start,
       this.end,
@@ -81,6 +85,7 @@ class Event {
     eventId = json['eventId'];
     eventSyncId = json['eventSyncId'];
     calendarId = json['calendarId'];
+    calendarSyncId = json['calendarSyncId'];
     title = json['title'];
     description = json['description'];
 
@@ -148,6 +153,7 @@ class Event {
     final data = <String, dynamic>{};
 
     data['calendarId'] = calendarId;
+    data['calendarSyncId'] = calendarSyncId;
     data['eventId'] = eventId;
     data['eventSyncId'] = eventSyncId;
     data['eventTitle'] = title;

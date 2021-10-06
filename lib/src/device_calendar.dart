@@ -337,6 +337,7 @@ class DeviceCalendarPlugin {
         result.data = rawData;
       }
     } catch (e) {
+      print('<debug> e: $e');
       _parsePlatformExceptionAndUpdateResult<T>(e as Exception?, result);
     }
 

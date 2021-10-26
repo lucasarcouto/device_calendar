@@ -137,7 +137,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
                     retrieveCalendars(cachedValues.pendingChannelResult)
                 }
                 RETRIEVE_EVENTS_REQUEST_CODE -> {
-                    retrieveEvents(cachedValues.calendarId, cachedValues.calendarEventsStartDate, cachedValues.calendarEventsEndDate, cachedValues.calendarEventsIds, cachedValues.pendingChannelResult)
+                    retrieveEvents(cachedValues.calendarId, cachedValues.calendarEventsStartDate, cachedValues.calendarEventsEndDate, cachedValues.calendarEventsIds, cachedValues.calendarEventsIdsSync, cachedValues.pendingChannelResult)
                 }
                 RETRIEVE_CALENDAR_REQUEST_CODE -> {
                     retrieveCalendar(cachedValues.calendarId, cachedValues.pendingChannelResult)
@@ -309,7 +309,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         finishWithSuccess(calendarId.toString(), pendingChannelResult)
     }
 
-    fun retrieveEvents(calendarId: String, startDate: Long?, endDate: Long?, eventIds: List<String>, pendingChannelResult: MethodChannel.Result) {
+    fun retrieveEvents(calendarId: String, startDate: Long?, endDate: Long?, eventIds: List<String>, eventIdsSync: List<String>, pendingChannelResult: MethodChannel.Result) {
         if (startDate == null && endDate == null && eventIds.isEmpty()) {
             finishWithError(INVALID_ARGUMENT, ErrorMessages.RETRIEVE_EVENTS_ARGUMENTS_NOT_VALID_MESSAGE, pendingChannelResult)
             return
@@ -331,10 +331,13 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
             val eventsCalendarQuery = "(${Events.CALENDAR_ID} = $calendarId)"
             val eventsNotDeletedQuery = "(${Events.DELETED} != 1)"
             val eventsIdsQuery = "(${CalendarContract.Instances.EVENT_ID} IN (${eventIds.joinToString()}))"
+            val eventsIdsSyncQuery = "(${Events._SYNC_ID} IN (${eventIdsSync.joinToString()}))"
 
             var eventsSelectionQuery = "$eventsCalendarQuery AND $eventsNotDeletedQuery"
             if (eventIds.isNotEmpty()) {
                 eventsSelectionQuery += " AND ($eventsIdsQuery)"
+            } else if (eventIdsSync.isNotEmpty()) {
+                eventsSelectionQuery += " AND ($eventsIdsSyncQuery)"
             }
             val eventsSortOrder = Events.DTSTART + " DESC"
 

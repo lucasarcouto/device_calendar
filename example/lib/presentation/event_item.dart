@@ -200,7 +200,7 @@ class _EventItemState extends State<EventItem> {
                         ),
                         Expanded(
                           child: Text(
-                            widget._calendarEvent?.availability?.enumToString ??
+                            widget._calendarEvent?.availability.enumToString ??
                                 '',
                             overflow: TextOverflow.ellipsis,
                           ),

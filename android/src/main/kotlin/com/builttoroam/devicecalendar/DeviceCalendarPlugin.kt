@@ -31,6 +31,7 @@ class DeviceCalendarPlugin() : MethodCallHandler {
     private val START_DATE_ARGUMENT = "startDate"
     private val END_DATE_ARGUMENT = "endDate"
     private val EVENT_IDS_ARGUMENT = "eventIds"
+    private val EVENT_IDS_SYNC_ARGUMENT = "eventIdsSync"
     private val EVENT_ID_ARGUMENT = "eventId"
     private val EVENT_SYNC_ID_ARGUMENT = "eventSyncId"
     private val EVENT_TITLE_ARGUMENT = "eventTitle"
@@ -103,8 +104,9 @@ class DeviceCalendarPlugin() : MethodCallHandler {
                 val startDate = call.argument<Long>(START_DATE_ARGUMENT)
                 val endDate = call.argument<Long>(END_DATE_ARGUMENT)
                 val eventIds = call.argument<List<String>>(EVENT_IDS_ARGUMENT) ?: listOf()
+                val eventIdsSync = call.argument<List<String>>(EVENT_IDS_SYNC_ARGUMENT) ?: listOf()
 
-                _calendarDelegate.retrieveEvents(calendarId!!, startDate, endDate, eventIds, result)
+                _calendarDelegate.retrieveEvents(calendarId!!, startDate, endDate, eventIds, eventIdsSync, result)
             }
             CREATE_OR_UPDATE_EVENT_METHOD -> {
                 val calendarId = call.argument<String>(CALENDAR_ID_ARGUMENT)

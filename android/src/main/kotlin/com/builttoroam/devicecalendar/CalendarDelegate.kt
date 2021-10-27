@@ -55,6 +55,8 @@ import com.builttoroam.devicecalendar.common.Constants.Companion.EVENT_PROJECTIO
 import com.builttoroam.devicecalendar.common.Constants.Companion.EVENT_PROJECTION_TITLE_INDEX
 import com.builttoroam.devicecalendar.common.Constants.Companion.EVENT_PROJECTION_EVENT_COLOR_INDEX
 import com.builttoroam.devicecalendar.common.Constants.Companion.EVENT_PROJECTION_DELETED_INDEX
+import com.builttoroam.devicecalendar.common.Constants.Companion.EVENT_PROJECTION_CALENDAR_ID_INDEX
+import com.builttoroam.devicecalendar.common.Constants.Companion.EVENT_PROJECTION_CALENDAR_SYNC_ID_INDEX
 import com.builttoroam.devicecalendar.common.Constants.Companion.REMINDER_MINUTES_INDEX
 import com.builttoroam.devicecalendar.common.Constants.Companion.REMINDER_PROJECTION
 import com.builttoroam.devicecalendar.common.DayOfWeek
@@ -382,8 +384,8 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         return
     }
     
-    fun retrieveEvent(eventId: String, eventIdSync: String, pendingChannelResult: MethodChannel.Result) {
-        if (eventId.isEmpty() && eventIdSync.isEmpty()) {
+    fun retrieveEvent(eventId: String?, eventIdSync: String?, pendingChannelResult: MethodChannel.Result) {
+        if (eventId?.isEmpty() == true && eventIdSync?.isEmpty() == true) {
             finishWithError(INVALID_ARGUMENT, ErrorMessages.RETRIEVE_EVENTS_ARGUMENTS_NOT_VALID_MESSAGE, pendingChannelResult)
             return
         }
@@ -413,7 +415,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
 
             val eventCursor = contentResolver?.query(eventsUri, EVENT_PROJECTION, eventSelectionQuery, null, eventSortOrder)
 
-            val event: Event?
+            val event: Event? = null
 
             val exceptionHandler = CoroutineExceptionHandler { _, exception ->
                 uiThreadHandler.post {
@@ -423,7 +425,8 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
 
             GlobalScope.launch(Dispatchers.IO + exceptionHandler) {
                 if (eventCursor?.moveToNext() == true) {
-                    event = parseEvent(calendarId, calendar.syncId, eventsCursor)
+                    event = parseEvent(cursor.getLong(EVENT_PROJECTION_CALENDAR_ID_INDEX), 
+                        cursor.getLong(EVENT_PROJECTION_CALENDAR_SYNC_ID_INDEX), eventCursor)
                 }
                 if(event != null) {
                     val attendees = retrieveAttendees(event.eventId!!, contentResolver)

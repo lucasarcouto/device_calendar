@@ -86,7 +86,8 @@ import java.util.*
 class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
     private val RETRIEVE_CALENDARS_REQUEST_CODE = 0
     private val RETRIEVE_EVENTS_REQUEST_CODE = RETRIEVE_CALENDARS_REQUEST_CODE + 1
-    private val RETRIEVE_CALENDAR_REQUEST_CODE = RETRIEVE_EVENTS_REQUEST_CODE + 1
+    private val RETRIEVE_EVENT_REQUEST_CODE = RETRIEVE_EVENTS_REQUEST_CODE + 1
+    private val RETRIEVE_CALENDAR_REQUEST_CODE = RETRIEVE_EVENT_REQUEST_CODE + 1
     private val CREATE_OR_UPDATE_EVENT_REQUEST_CODE = RETRIEVE_CALENDAR_REQUEST_CODE + 1
     private val DELETE_EVENT_REQUEST_CODE = CREATE_OR_UPDATE_EVENT_REQUEST_CODE + 1
     private val REQUEST_PERMISSIONS_REQUEST_CODE = DELETE_EVENT_REQUEST_CODE + 1
@@ -138,6 +139,9 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
                 }
                 RETRIEVE_EVENTS_REQUEST_CODE -> {
                     retrieveEvents(cachedValues.calendarId, cachedValues.calendarEventsStartDate, cachedValues.calendarEventsEndDate, cachedValues.calendarEventsIds, cachedValues.calendarEventsIdsSync, cachedValues.pendingChannelResult)
+                }
+                RETRIEVE_EVENT_REQUEST_CODE -> {
+                    retrieveEvent(cachedValues.calendarEventId, cachedValues.calendarEventIdSync, cachedValues.pendingChannelResult)
                 }
                 RETRIEVE_CALENDAR_REQUEST_CODE -> {
                     retrieveCalendar(cachedValues.calendarId, cachedValues.pendingChannelResult)
@@ -372,6 +376,71 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
             }
         } else {
             val parameters = CalendarMethodsParametersCacheModel(pendingChannelResult, RETRIEVE_EVENTS_REQUEST_CODE, calendarId, startDate, endDate)
+            requestPermissions(parameters)
+        }
+
+        return
+    }
+    
+    fun retrieveEvent(eventId: String, eventIdSync: String, pendingChannelResult: MethodChannel.Result) {
+        if (eventId.isEmpty() && eventIdSync.isEmpty()) {
+            finishWithError(INVALID_ARGUMENT, ErrorMessages.RETRIEVE_EVENTS_ARGUMENTS_NOT_VALID_MESSAGE, pendingChannelResult)
+            return
+        }
+
+        if (arePermissionsGranted()) {
+            // val calendar = retrieveCalendar(calendarId, pendingChannelResult, true)
+            // if (calendar == null) {
+            //     finishWithError(NOT_FOUND, "Couldn't retrieve the Calendar with ID $calendarId", pendingChannelResult)
+            //     return
+            // }
+
+            val contentResolver: ContentResolver? = _context?.contentResolver
+            val eventsUriBuilder = CalendarContract.Instances.CONTENT_URI.buildUpon()
+
+            val eventsUri = eventsUriBuilder.build()
+            val eventNotDeletedQuery = "(${Events.DELETED} != 1)"
+            val eventIdQuery = "(${CalendarContract.Instances.EVENT_ID} == $eventId)"
+            val eventIdSyncQuery = "(${Events._SYNC_ID} == $eventIdSync)"
+
+            var eventSelectionQuery = "$eventNotDeletedQuery"
+            if (eventId.isNotEmpty()) {
+                eventSelectionQuery += " AND ($eventIdQuery)"
+            } else if (eventIdSync.isNotEmpty()) {
+                eventSelectionQuery += " AND ($eventIdSyncQuery)"
+            }
+            val eventSortOrder = Events.DTSTART + " DESC LIMIT 1"
+
+            val eventCursor = contentResolver?.query(eventsUri, EVENT_PROJECTION, eventSelectionQuery, null, eventSortOrder)
+
+            val event: Event?
+
+            val exceptionHandler = CoroutineExceptionHandler { _, exception ->
+                uiThreadHandler.post {
+                    finishWithError(GENERIC_ERROR, exception.message, pendingChannelResult)
+                }
+            }
+
+            GlobalScope.launch(Dispatchers.IO + exceptionHandler) {
+                if (eventCursor?.moveToNext() == true) {
+                    event = parseEvent(calendarId, calendar.syncId, eventsCursor)
+                }
+                if(event != null) {
+                    val attendees = retrieveAttendees(event.eventId!!, contentResolver)
+                    event.organizer = attendees.firstOrNull { it.isOrganizer != null && it.isOrganizer }
+                    event.attendees = attendees
+                    event.reminders = retrieveReminders(event.eventId!!, contentResolver)
+                }
+            }.invokeOnCompletion { cause ->
+                eventCursor?.close()
+                if (cause == null) {
+                    uiThreadHandler.post {
+                        finishWithSuccess(_gson?.toJson(event), pendingChannelResult)
+                    }
+                }
+            }
+        } else {
+            val parameters = CalendarMethodsParametersCacheModel(pendingChannelResult, RETRIEVE_EVENTS_REQUEST_CODE)
             requestPermissions(parameters)
         }
 

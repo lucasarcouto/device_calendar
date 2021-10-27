@@ -70,7 +70,7 @@ class DeviceCalendarPlugin {
 
   /// Retrieves the events from the specified calendar
   ///
-  /// The `calendarId` paramter is the id of the calendar that plugin will return events for
+  /// The `calendarId` parameter is the id of the calendar that plugin will return events for
   /// The `retrieveEventsParams` parameter combines multiple properties that
   /// specifies conditions of the events retrieval. For instance, defining [RetrieveEventsParams.startDate]
   /// and [RetrieveEventsParams.endDate] will return events only happening in that time range
@@ -119,6 +119,35 @@ class DeviceCalendarPlugin {
             .decode(rawData)
             .map<Event>((decodedEvent) => Event.fromJson(decodedEvent)),
       ),
+    );
+  }
+
+  /// Retrieves the event which has the specified eventId or eventSyncId
+  ///
+  /// Returns a [Result] containing an [Event], that fall
+  /// into the specified parameters
+  Future<Result<Event>> retrieveEvent(
+    RetrieveEventsParams? retrieveEventsParams,
+  ) async {
+    return _invokeChannelMethod(
+      ChannelConstants.methodNameRetrieveEvents,
+      assertParameters: (result) {
+        _assertParameter(
+          result,
+          !((retrieveEventsParams?.eventId?.isEmpty ?? true) &&
+              !(retrieveEventsParams?.eventIdSync?.isEmpty ?? true)),
+          ErrorCodes.invalidArguments,
+          ErrorMessages.invalidRetrieveEventsParams,
+        );
+      },
+      arguments: () => <String, Object?>{
+        ChannelConstants.parameterNameEventId: retrieveEventsParams?.eventId,
+        ChannelConstants.parameterNameEventIdSync:
+            retrieveEventsParams?.eventIdSync,
+      },
+      evaluateResponse: (rawData) => json
+          .decode(rawData)
+          .map<Event>((decodedEvent) => Event.fromJson(decodedEvent)),
     );
   }
 

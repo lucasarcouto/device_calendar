@@ -406,16 +406,16 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
             val eventIdSyncQuery = "(${Events._SYNC_ID} == $eventIdSync)"
 
             var eventSelectionQuery = "$eventNotDeletedQuery"
-            if (eventId.isNotEmpty()) {
+            if (eventId?.isNotEmpty() == true) {
                 eventSelectionQuery += " AND ($eventIdQuery)"
-            } else if (eventIdSync.isNotEmpty()) {
+            } else if (eventIdSync?.isNotEmpty() == true) {
                 eventSelectionQuery += " AND ($eventIdSyncQuery)"
             }
             val eventSortOrder = Events.DTSTART + " DESC LIMIT 1"
 
             val eventCursor = contentResolver?.query(eventsUri, EVENT_PROJECTION, eventSelectionQuery, null, eventSortOrder)
 
-            val event: Event? = null
+            var event: Event? = null
 
             val exceptionHandler = CoroutineExceptionHandler { _, exception ->
                 uiThreadHandler.post {
@@ -425,8 +425,8 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
 
             GlobalScope.launch(Dispatchers.IO + exceptionHandler) {
                 if (eventCursor?.moveToNext() == true) {
-                    event = parseEvent(cursor.getLong(EVENT_PROJECTION_CALENDAR_ID_INDEX), 
-                        cursor.getLong(EVENT_PROJECTION_CALENDAR_SYNC_ID_INDEX), eventCursor)
+                    event = parseEvent(eventCursor.getLong(EVENT_PROJECTION_CALENDAR_ID_INDEX), 
+                        eventCursor.getLong(EVENT_PROJECTION_CALENDAR_SYNC_ID_INDEX), eventCursor)
                 }
                 if(event != null) {
                     val attendees = retrieveAttendees(event.eventId!!, contentResolver)

@@ -405,7 +405,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
             val eventIdQuery = "(${CalendarContract.Instances.EVENT_ID} == $eventId)"
             val eventIdSyncQuery = "(${Events._SYNC_ID} == $eventIdSync)"
 
-            var eventSelectionQuery = "$eventNotDeletedQuery"
+            var eventSelectionQuery = eventNotDeletedQuery
             if (eventId?.isNotEmpty() == true) {
                 eventSelectionQuery += " AND ($eventIdQuery)"
             } else if (eventIdSync?.isNotEmpty() == true) {
@@ -425,14 +425,14 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
 
             GlobalScope.launch(Dispatchers.IO + exceptionHandler) {
                 if (eventCursor?.moveToNext() == true) {
-                    event = parseEvent(eventCursor.getLong(EVENT_PROJECTION_CALENDAR_ID_INDEX), 
-                        eventCursor.getLong(EVENT_PROJECTION_CALENDAR_SYNC_ID_INDEX), eventCursor)
+                    event = parseEvent(eventCursor.getString(EVENT_PROJECTION_CALENDAR_ID_INDEX),
+                        eventCursor.getString(EVENT_PROJECTION_CALENDAR_SYNC_ID_INDEX), eventCursor)
                 }
                 if(event != null) {
-                    val attendees = retrieveAttendees(event.eventId!!, contentResolver)
-                    event.organizer = attendees.firstOrNull { it.isOrganizer != null && it.isOrganizer }
-                    event.attendees = attendees
-                    event.reminders = retrieveReminders(event.eventId!!, contentResolver)
+                    val attendees = retrieveAttendees(event?.eventId!!, contentResolver)
+                    event?.organizer = attendees.firstOrNull { it.isOrganizer != null && it.isOrganizer }
+                    event?.attendees = attendees
+                    event?.reminders = retrieveReminders(event?.eventId!!, contentResolver)
                 }
             }.invokeOnCompletion { cause ->
                 eventCursor?.close()

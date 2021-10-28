@@ -415,12 +415,6 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
 
             val eventCursor = contentResolver?.query(eventsUri, EVENT_PROJECTION, eventSelectionQuery, null, eventSortOrder)
 
-            println("<debug> eventsUri: $eventsUri")
-            println("<debug> EVENT_PROJECTION: $EVENT_PROJECTION")
-            println("<debug> eventSelectionQuery: $eventSelectionQuery")
-            println("<debug> eventSortOrder: $eventSortOrder")
-            println("<debug> eventCursor: $eventCursor")
-
             var event: Event? = null
 
             val exceptionHandler = CoroutineExceptionHandler { _, exception ->
@@ -434,7 +428,6 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
                     event = parseEvent(eventCursor.getString(EVENT_PROJECTION_CALENDAR_ID_INDEX),
                         eventCursor.getString(EVENT_PROJECTION_CALENDAR_SYNC_ID_INDEX), eventCursor)
                 }
-                println("<debug> event: $event")
                 if(event != null) {
                     val attendees = retrieveAttendees(event?.eventId!!, contentResolver)
                     event?.organizer = attendees.firstOrNull { it.isOrganizer != null && it.isOrganizer }

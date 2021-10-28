@@ -130,7 +130,7 @@ class DeviceCalendarPlugin {
     RetrieveEventsParams? retrieveEventsParams,
   ) async {
     return _invokeChannelMethod(
-      ChannelConstants.methodNameRetrieveEvents,
+      ChannelConstants.methodNameRetrieveEvent,
       assertParameters: (result) {
         _assertParameter(
           result,

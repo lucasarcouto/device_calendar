@@ -402,7 +402,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
 
             val eventsUri = eventsUriBuilder.build()
             val eventNotDeletedQuery = "(${Events.DELETED} != 1)"
-            val eventIdQuery = "(${CalendarContract.Instances.EVENT_ID} == '$eventId')"
+            val eventIdQuery = "(${CalendarContract.Events._ID} == '$eventId')"
             val eventIdSyncQuery = "(${Events._SYNC_ID} == '$eventIdSync')"
 
             var eventSelectionQuery = eventNotDeletedQuery

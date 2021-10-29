@@ -398,7 +398,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
             // }
 
             val contentResolver: ContentResolver? = _context?.contentResolver
-            val eventsUriBuilder = CalendarContract.Instances.CONTENT_URI.buildUpon()
+            val eventsUriBuilder = CalendarContract.Events.CONTENT_URI.buildUpon()
 
             val eventsUri = eventsUriBuilder.build()
             val eventNotDeletedQuery = "(${Events.DELETED} != 1)"

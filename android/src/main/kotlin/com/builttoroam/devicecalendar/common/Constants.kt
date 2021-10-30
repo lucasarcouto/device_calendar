@@ -81,7 +81,28 @@ class Constants {
                 CalendarContract.Events.DELETED,
                 CalendarContract.Calendars._ID,
                 CalendarContract.Calendars._SYNC_ID
-
+        )
+        
+        val EVENT_PROJECTION_RETRIEVE_EVENT: Array<String> = arrayOf(
+                CalendarContract.Events._ID,
+                CalendarContract.Events._SYNC_ID,
+                CalendarContract.Events.TITLE,
+                CalendarContract.Events.DESCRIPTION,
+                CalendarContract.Instances.BEGIN,
+                CalendarContract.Instances.END,
+                CalendarContract.Instances.DURATION,
+                CalendarContract.Events.RDATE,
+                CalendarContract.Events.RRULE,
+                CalendarContract.Events.ALL_DAY,
+                CalendarContract.Events.EVENT_LOCATION,
+                CalendarContract.Events.CUSTOM_APP_URI,
+                CalendarContract.Events.EVENT_TIMEZONE,
+                CalendarContract.Events.EVENT_END_TIMEZONE,
+                CalendarContract.Events.AVAILABILITY,
+                CalendarContract.Events.EVENT_COLOR,
+                CalendarContract.Events.DELETED,
+                CalendarContract.Calendars._ID,
+                CalendarContract.Calendars._SYNC_ID
         )
 
         const val EVENT_INSTANCE_DELETION_ID_INDEX: Int = 0

@@ -413,7 +413,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
             }
             val eventSortOrder = Events.DTSTART + " DESC LIMIT 1"
 
-            val eventCursor = contentResolver?.query(eventsUri, EVENT_PROJECTION, eventSelectionQuery, null, eventSortOrder)
+            val eventCursor = contentResolver?.query(eventsUri, EVENT_PROJECTION_RETRIEVE_EVENT, eventSelectionQuery, null, eventSortOrder)
 
             var event: Event? = null
 

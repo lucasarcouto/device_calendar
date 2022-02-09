@@ -69,7 +69,7 @@ class DeviceCalendarPlugin {
 
   /// Retrieves the events from the specified calendar
   ///
-  /// The `calendarId` paramter is the id of the calendar that plugin will return events for
+  /// The `calendarId` parameter is the id of the calendar that plugin will return events for
   /// The `retrieveEventsParams` parameter combines multiple properties that
   /// specifies conditions of the events retrieval. For instance, defining [RetrieveEventsParams.startDate]
   /// and [RetrieveEventsParams.endDate] will return events only happening in that time range
@@ -395,7 +395,9 @@ class DeviceCalendarPlugin {
       } else {
         result.data = rawData;
       }
-    } catch (e) {
+    } catch (e, stack) {
+      print('<debug> e: $e');
+      print('<debug> stack: $stack');
       _parsePlatformExceptionAndUpdateResult<T>(e as Exception?, result);
     }
 

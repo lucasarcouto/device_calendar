@@ -143,7 +143,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
                     retrieveCalendars(cachedValues.pendingChannelResult)
                 }
                 RETRIEVE_EVENTS_REQUEST_CODE -> {
-                    retrieveEvents(cachedValues.calendarId, cachedValues.calendarEventsStartDate, cachedValues.calendarEventsEndDate, cachedValues.calendarEventsIds, cachedValues.pendingChannelResult)
+                    retrieveEvents(cachedValues.calendarId, cachedValues.calendarEventsStartDate, cachedValues.calendarEventsEndDate, cachedValues.calendarEventsIds, cachedValues.calendarEventsIdsSync, cachedValues.pendingChannelResult)
                 }
 				RETRIEVE_EVENT_REQUEST_CODE -> {
                     retrieveEvent(cachedValues.calendarEventId, cachedValues.calendarEventIdSync, cachedValues.pendingChannelResult)

@@ -811,7 +811,7 @@ fun retrieveEvent(eventId: String?, eventIdSync: String?, pendingChannelResult: 
         return calendar
     }
 
-    private fun parseEvent(calendarId: String, cursor: Cursor?): Event? {
+    private fun parseEvent(calendarId: String, calendarSyncId: String, cursor: Cursor?): Event? {
         if (cursor == null) {
             return null
         }

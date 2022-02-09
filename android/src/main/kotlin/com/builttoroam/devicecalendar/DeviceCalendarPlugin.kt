@@ -32,6 +32,7 @@ class DeviceCalendarPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware {
     private val HAS_PERMISSIONS_METHOD = "hasPermissions"
     private val RETRIEVE_CALENDARS_METHOD = "retrieveCalendars"
     private val RETRIEVE_EVENTS_METHOD = "retrieveEvents"
+    private val RETRIEVE_EVENT_METHOD = "retrieveEvent"
     private val DELETE_EVENT_METHOD = "deleteEvent"
     private val DELETE_EVENT_INSTANCE_METHOD = "deleteEventInstance"
     private val CREATE_OR_UPDATE_EVENT_METHOD = "createOrUpdateEvent"
@@ -44,7 +45,9 @@ class DeviceCalendarPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware {
     private val START_DATE_ARGUMENT = "startDate"
     private val END_DATE_ARGUMENT = "endDate"
     private val EVENT_IDS_ARGUMENT = "eventIds"
+    private val EVENT_IDS_SYNC_ARGUMENT = "eventIdsSync"
     private val EVENT_ID_ARGUMENT = "eventId"
+    private val EVENT_SYNC_ID_ARGUMENT = "eventSyncId"
     private val EVENT_TITLE_ARGUMENT = "eventTitle"
     private val EVENT_LOCATION_ARGUMENT = "eventLocation"
     private val EVENT_URL_ARGUMENT = "eventURL"
@@ -72,6 +75,8 @@ class DeviceCalendarPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware {
     private val CALENDAR_COLOR_ARGUMENT = "calendarColor"
     private val LOCAL_ACCOUNT_NAME_ARGUMENT = "localAccountName"
     private val EVENT_AVAILABILITY_ARGUMENT = "availability"
+    private val EVENT_COLOR_ARGUMENT = "color"
+    private val EVENT_DELETED_ARGUMENT = "deleted"
     private val ATTENDANCE_STATUS_ARGUMENT = "attendanceStatus"
 
     private lateinit var _calendarDelegate: CalendarDelegate
@@ -125,6 +130,12 @@ class DeviceCalendarPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 _calendarDelegate.retrieveEvents(calendarId!!, startDate, endDate, eventIds, result)
             }
+            RETRIEVE_EVENT_METHOD -> {
+                val eventId = call.argument<String>(EVENT_ID_ARGUMENT)
+                val eventIdSync = call.argument<String>(EVENT_SYNC_ID_ARGUMENT)
+
+                _calendarDelegate.retrieveEvent(eventId, eventIdSync, result)
+            }
             CREATE_OR_UPDATE_EVENT_METHOD -> {
                 val calendarId = call.argument<String>(CALENDAR_ID_ARGUMENT)
                 val event = parseEventArgs(call, calendarId)
@@ -168,6 +179,7 @@ class DeviceCalendarPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware {
         event.eventTitle = call.argument<String>(EVENT_TITLE_ARGUMENT)
         event.calendarId = calendarId
         event.eventId = call.argument<String>(EVENT_ID_ARGUMENT)
+        event.eventSyncId = call.argument<String>(EVENT_SYNC_ID_ARGUMENT)
         event.eventDescription = call.argument<String>(EVENT_DESCRIPTION_ARGUMENT)
         event.eventAllDay = call.argument<Boolean>(EVENT_ALL_DAY_ARGUMENT) ?: false
         event.eventStartDate = call.argument<Long>(EVENT_START_DATE_ARGUMENT)!!
@@ -177,6 +189,8 @@ class DeviceCalendarPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware {
         event.eventLocation = call.argument<String>(EVENT_LOCATION_ARGUMENT)
         event.eventURL = call.argument<String>(EVENT_URL_ARGUMENT)
         event.availability = parseAvailability(call.argument<String>(EVENT_AVAILABILITY_ARGUMENT))
+        event.color = call.argument<String>(EVENT_COLOR_ARGUMENT)
+        event.deleted = call.argument<String>(EVENT_DELETED_ARGUMENT)
 
         if (call.hasArgument(RECURRENCE_RULE_ARGUMENT) && call.argument<Map<String, Any>>(RECURRENCE_RULE_ARGUMENT) != null) {
             val recurrenceRule = parseRecurrenceRuleArgs(call)

@@ -91,6 +91,7 @@ class DeviceCalendarPlugin {
         _assertParameter(
           result,
           !((retrieveEventsParams?.eventIds?.isEmpty ?? true) &&
+              !(retrieveEventsParams?.eventIdsSync?.isEmpty ?? true) &&
               ((retrieveEventsParams?.startDate == null ||
                       retrieveEventsParams?.endDate == null) ||
                   (retrieveEventsParams?.startDate != null &&
@@ -109,12 +110,43 @@ class DeviceCalendarPlugin {
         ChannelConstants.parameterNameEndDate:
             retrieveEventsParams?.endDate?.millisecondsSinceEpoch,
         ChannelConstants.parameterNameEventIds: retrieveEventsParams?.eventIds,
+        ChannelConstants.parameterNameEventIdsSync:
+            retrieveEventsParams?.eventIdsSync,
       },
       evaluateResponse: (rawData) => UnmodifiableListView(
         json
             .decode(rawData)
             .map<Event>((decodedEvent) => Event.fromJson(decodedEvent)),
       ),
+    );
+  }
+
+  /// Retrieves the event which has the specified eventId or eventSyncId
+  ///
+  /// Returns a [Result] containing an [Event], that fall
+  /// into the specified parameters
+  Future<Result<Event>> retrieveEvent(
+    RetrieveEventsParams? retrieveEventsParams,
+  ) async {
+    return _invokeChannelMethod(
+      ChannelConstants.methodNameRetrieveEvent,
+      assertParameters: (result) {
+        _assertParameter(
+          result,
+          !((retrieveEventsParams?.eventId?.isEmpty ?? true) &&
+              !(retrieveEventsParams?.eventIdSync?.isEmpty ?? true)),
+          ErrorCodes.invalidArguments,
+          ErrorMessages.invalidRetrieveEventsParams,
+        );
+      },
+      arguments: () => <String, Object?>{
+        ChannelConstants.parameterNameEventId: retrieveEventsParams?.eventId,
+        ChannelConstants.parameterNameEventIdSync:
+            retrieveEventsParams?.eventIdSync,
+      },
+      evaluateResponse: (rawData) => json
+          .decode(rawData)
+          .map<Event>((decodedEvent) => Event.fromJson(decodedEvent)),
     );
   }
 
@@ -214,9 +246,9 @@ class DeviceCalendarPlugin {
             // allDay events on Android need to be at midnight UTC
             event.start = Platform.isAndroid
                 ? TZDateTime.utc(event.start!.year, event.start!.month,
-                event.start!.day, 0, 0, 0)
+                    event.start!.day, 0, 0, 0)
                 : TZDateTime.from(dateStart,
-                timeZoneDatabase.locations[event.start!.location.name]!);
+                    timeZoneDatabase.locations[event.start!.location.name]!);
           }
           if (event.end != null) {
             var dateEnd = DateTime(
@@ -226,10 +258,10 @@ class DeviceCalendarPlugin {
             // Jan 1 and 2, should be from Jan 1 00:00:00 to Jan 3 00:00:00
             event.end = Platform.isAndroid
                 ? TZDateTime.utc(event.end!.year, event.end!.month,
-                event.end!.day, 0, 0, 0)
-                .add(Duration(days: 1))
+                        event.end!.day, 0, 0, 0)
+                    .add(Duration(days: 1))
                 : TZDateTime.from(dateEnd,
-                timeZoneDatabase.locations[event.end!.location.name]!);
+                    timeZoneDatabase.locations[event.end!.location.name]!);
           }
         }
 
@@ -322,7 +354,7 @@ class DeviceCalendarPlugin {
 
   /// Displays a native iOS view [EKEventViewController]
   /// https://developer.apple.com/documentation/eventkitui/ekeventviewcontroller
-  /// 
+  ///
   /// Allows to change the event's attendance status
   /// Works only on iOS
   /// Returns after dismissing EKEventViewController's dialog
@@ -336,7 +368,6 @@ class DeviceCalendarPlugin {
       },
     );
   }
-
 
   Future<Result<T>> _invokeChannelMethod<T>(
     String channelMethodName, {

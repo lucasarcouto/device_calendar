@@ -10,8 +10,14 @@ class Event {
   /// Read-only. The unique identifier for this event. This is auto-generated when a new event is created
   String? eventId;
 
+  /// Read-only. The unique identifier for this event after it was synced with Google servers
+  String? eventSyncId;
+
   /// Read-only. The identifier of the calendar that this event is associated with
   String? calendarId;
+
+  /// Read-only. The unique identifier for this event after it was synced with Google servers
+  String? calendarSyncId;
 
   /// The title of this event
   String? title;
@@ -46,6 +52,12 @@ class Event {
   /// Indicates if this event counts as busy time, tentative, unavaiable or is still free time
   late Availability availability;
 
+  /// A secondary color for the individual event.
+  String? color;
+
+  /// Indicates whether the row has been deleted but not synced to the server. A deleted row should be ignored.
+  String? deleted;
+
   ///Note for development:
   ///
   ///JSON field names are coded in dart, swift and kotlin to facilitate data exchange.
@@ -58,6 +70,8 @@ class Event {
   ///`android/src/main/kotlin/com/builttoroam/devicecalendar/DeviceCalendarPlugin.kt`
   Event(this.calendarId,
       {this.eventId,
+      this.eventSyncId,
+      this.calendarSyncId,
       this.title,
       this.start,
       this.end,
@@ -68,7 +82,9 @@ class Event {
       this.availability = Availability.Busy,
       this.location,
       this.url,
-      this.allDay = false});
+      this.allDay = false,
+      this.color,
+      this.deleted});
 
   ///Get Event from JSON.
   ///
@@ -103,7 +119,9 @@ class Event {
     });
 
     eventId = json['eventId'];
+    eventSyncId = json['eventSyncId'];
     calendarId = json['calendarId'];
+    calendarSyncId = json['calendarSyncId'];
     title = json['eventTitle'];
     description = json['eventDescription'];
 
@@ -138,6 +156,8 @@ class Event {
     }
     location = json['eventLocation'];
     availability = parseStringToAvailability(json['availability']);
+    color = json['color'];
+    deleted = json['deleted'];
 
     foundUrl = json['eventURL']?.toString();
     if (foundUrl?.isEmpty ?? true) {
@@ -185,7 +205,9 @@ class Event {
     final data = <String, dynamic>{};
 
     data['calendarId'] = calendarId;
+    data['calendarSyncId'] = calendarSyncId;
     data['eventId'] = eventId;
+    data['eventSyncId'] = eventSyncId;
     data['eventTitle'] = title;
     data['eventDescription'] = description;
     data['eventStartDate'] = start?.millisecondsSinceEpoch ??
@@ -198,6 +220,8 @@ class Event {
     data['eventLocation'] = location;
     data['eventURL'] = url?.data?.contentText;
     data['availability'] = availability.enumToString;
+    data['deleted'] = deleted;
+    data['color'] = color;
 
     if (attendees != null) {
       data['attendees'] = attendees?.map((a) => a?.toJson()).toList();

@@ -127,7 +127,7 @@ class DeviceCalendarPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware {
                 val startDate = call.argument<Long>(START_DATE_ARGUMENT)
                 val endDate = call.argument<Long>(END_DATE_ARGUMENT)
                 val eventIds = call.argument<List<String>>(EVENT_IDS_ARGUMENT) ?: listOf<String>()
-                val eventIdsSync = call.argument<List<String>>(EVENT_SYNC_ID_ARGUMENT)
+                val eventIdsSync = call.argument<List<String>>(EVENT_SYNC_ID_ARGUMENT) ?: listOf<String>()
 
                 _calendarDelegate.retrieveEvents(calendarId!!, startDate, endDate, eventIds, eventIdsSync, result)
             }

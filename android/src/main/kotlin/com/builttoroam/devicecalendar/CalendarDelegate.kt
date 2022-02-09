@@ -146,7 +146,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
                     retrieveEvents(cachedValues.calendarId, cachedValues.calendarEventsStartDate, cachedValues.calendarEventsEndDate, cachedValues.calendarEventsIds, cachedValues.calendarEventsIdsSync, cachedValues.pendingChannelResult)
                 }
 				RETRIEVE_EVENT_REQUEST_CODE -> {
-                    retrieveEvent(cachedValues.calendarEventId, cachedValues.calendarEventIdSync, cachedValues.pendingChannelResult)
+                    retrieveEvent(cachedValues.calendarId, cachedValues.calendarEventId, cachedValues.calendarEventIdSync, cachedValues.pendingChannelResult)
                 }
                 RETRIEVE_CALENDAR_REQUEST_CODE -> {
                     retrieveCalendar(cachedValues.calendarId, cachedValues.pendingChannelResult)
@@ -387,18 +387,18 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
         return
     }
 
-fun retrieveEvent(eventId: String?, eventIdSync: String?, pendingChannelResult: MethodChannel.Result) {
+fun retrieveEvent(calendarId: String, eventId: String?, eventIdSync: String?, pendingChannelResult: MethodChannel.Result) {
         if (eventId?.isEmpty() == true && eventIdSync?.isEmpty() == true) {
             finishWithError(INVALID_ARGUMENT, ErrorMessages.RETRIEVE_EVENTS_ARGUMENTS_NOT_VALID_MESSAGE, pendingChannelResult)
             return
         }
 
         if (arePermissionsGranted()) {
-            // val calendar = retrieveCalendar(calendarId, pendingChannelResult, true)
-            // if (calendar == null) {
-            //     finishWithError(NOT_FOUND, "Couldn't retrieve the Calendar with ID $calendarId", pendingChannelResult)
-            //     return
-            // }
+            val calendar = retrieveCalendar(calendarId, pendingChannelResult, true)
+            if (calendar == null) {
+                finishWithError(NOT_FOUND, "Couldn't retrieve the Calendar with ID $calendarId", pendingChannelResult)
+                return
+            }
 
             val contentResolver: ContentResolver? = _context?.contentResolver
             val eventsUriBuilder = CalendarContract.Events.CONTENT_URI.buildUpon()
@@ -432,7 +432,7 @@ fun retrieveEvent(eventId: String?, eventIdSync: String?, pendingChannelResult: 
                         eventCursor.getString(EVENT_PROJECTION_CALENDAR_SYNC_ID_INDEX), eventCursor)
                 }
                 if(event != null) {
-                    val attendees = retrieveAttendees(event?.eventId!!, contentResolver)
+                    val attendees = retrieveAttendees(calendar, event?.eventId!!, contentResolver)
                     event?.organizer = attendees.firstOrNull { it.isOrganizer != null && it.isOrganizer }
                     event?.attendees = attendees
                     event?.reminders = retrieveReminders(event?.eventId!!, contentResolver)
@@ -564,9 +564,9 @@ fun retrieveEvent(eventId: String?, eventIdSync: String?, pendingChannelResult: 
         val duration: String? = null
         values.put(Events.ALL_DAY, event.eventAllDay)
 		
-        if (event.allDay) {
+        if (event.eventAllDay) {
             val calendar = java.util.Calendar.getInstance()
-            calendar.timeInMillis = event.start!!
+            calendar.timeInMillis = event.eventStartDate!!
             calendar.set(java.util.Calendar.HOUR, 0)
             calendar.set(java.util.Calendar.MINUTE, 0)
             calendar.set(java.util.Calendar.SECOND, 0)
@@ -574,7 +574,7 @@ fun retrieveEvent(eventId: String?, eventIdSync: String?, pendingChannelResult: 
 
             values.put(Events.DTSTART, calendar.timeInMillis)
             values.put(Events.DTEND, calendar.timeInMillis)
-            values.put(Events.EVENT_TIMEZONE, getTimeZone(event.startTimeZone).id)
+            values.put(Events.EVENT_TIMEZONE, getTimeZone(event.eventStartTimeZone).id)
         } else {
 			values.put(Events.DTSTART, event.eventStartDate!!)
 			values.put(Events.EVENT_TIMEZONE, getTimeZone(event.eventStartTimeZone).id)

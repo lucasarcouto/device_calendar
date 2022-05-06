@@ -134,12 +134,15 @@ class DeviceCalendarPlugin {
         _assertParameter(
           result,
           !((retrieveEventsParams?.eventId?.isEmpty ?? true) &&
-              (retrieveEventsParams?.eventIdSync?.isEmpty ?? true)),
+              (retrieveEventsParams?.eventIdSync?.isEmpty ?? true) &&
+              (retrieveEventsParams?.calendarId.isEmpty ?? true)),
           ErrorCodes.invalidArguments,
           ErrorMessages.invalidRetrieveEventsParams,
         );
       },
       arguments: () => <String, Object?>{
+        ChannelConstants.parameterNameCalendarId:
+            retrieveEventsParams?.calendarId,
         ChannelConstants.parameterNameEventId: retrieveEventsParams?.eventId,
         ChannelConstants.parameterNameEventIdSync:
             retrieveEventsParams?.eventIdSync,

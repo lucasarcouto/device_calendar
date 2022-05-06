@@ -1,4 +1,5 @@
 class RetrieveEventsParams {
+  final String calendarId;
   final List<String>? eventIds;
   final String? eventId;
   final List<String>? eventIdsSync;
@@ -7,7 +8,8 @@ class RetrieveEventsParams {
   final DateTime? endDate;
 
   const RetrieveEventsParams(
-      {this.eventIds,
+      {required this.calendarId,
+      this.eventIds,
       this.eventId,
       this.eventIdsSync,
       this.eventIdSync,

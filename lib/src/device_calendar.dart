@@ -134,7 +134,7 @@ class DeviceCalendarPlugin {
         _assertParameter(
           result,
           !((retrieveEventsParams?.eventId?.isEmpty ?? true) &&
-              !(retrieveEventsParams?.eventIdSync?.isEmpty ?? true)),
+              (retrieveEventsParams?.eventIdSync?.isEmpty ?? true)),
           ErrorCodes.invalidArguments,
           ErrorMessages.invalidRetrieveEventsParams,
         );

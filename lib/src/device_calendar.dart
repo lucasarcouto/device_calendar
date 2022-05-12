@@ -149,7 +149,7 @@ class DeviceCalendarPlugin {
       },
       evaluateResponse: (rawData) => json
           .decode(rawData)
-          .map<String, dynamic>((decodedEvent) => Event.fromJson(decodedEvent)),
+          .map((decodedEvent) => Event.fromJson(decodedEvent)),
     );
   }
 

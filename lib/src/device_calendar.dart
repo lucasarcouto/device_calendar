@@ -147,9 +147,8 @@ class DeviceCalendarPlugin {
         ChannelConstants.parameterNameEventIdSync:
             retrieveEventsParams?.eventIdSync,
       },
-      evaluateResponse: (rawData) => json
-          .decode(rawData)
-          .map((decodedEvent) => Event.fromJson(decodedEvent)),
+      evaluateResponse: (rawData) => json.decode(rawData).map<Event>(
+          (Map<String, dynamic> decodedEvent) => Event.fromJson(decodedEvent)),
     );
   }
 

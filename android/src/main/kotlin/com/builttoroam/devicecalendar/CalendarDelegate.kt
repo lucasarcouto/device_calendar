@@ -340,7 +340,7 @@ class CalendarDelegate : PluginRegistry.RequestPermissionsResultListener {
             val eventsCalendarQuery = "(${Events.CALENDAR_ID} = $calendarId)"
             val eventsNotDeletedQuery = "(${Events.DELETED} != 1)"
             val eventsIdsQuery = "(${CalendarContract.Instances.EVENT_ID} IN (${eventIds.joinToString()}))"
-			val eventsIdsSyncQuery = "(${Events._SYNC_ID} IN (${eventIdsSync.joinToString()}))"
+			val eventsIdsSyncQuery = "(${CalendarContract.Events._SYNC_ID} IN (${eventIdsSync.joinToString()}))"
 
             var eventsSelectionQuery = "$eventsCalendarQuery AND $eventsNotDeletedQuery"
             if (eventIds.isNotEmpty()) {
@@ -406,13 +406,13 @@ fun retrieveEvent(calendarId: String, eventId: String?, eventIdSync: String?, pe
             val eventsUri = eventsUriBuilder.build()
             val eventNotDeletedQuery = "(${Events.DELETED} != 1)"
             val eventIdQuery = "(${CalendarContract.Events._ID} == '$eventId')"
-            val eventIdSyncQuery = "(${Events._SYNC_ID} == '$eventIdSync')"
+            val eventIdSyncQuery = "(${CalendarContract.Events._SYNC_ID} == '$eventIdSync')"
 
             var eventSelectionQuery = eventNotDeletedQuery
             if (eventId?.isNotEmpty() == true) {
-                eventSelectionQuery += " AND ($eventIdQuery)"
+                eventSelectionQuery += " AND $eventIdQuery"
             } else if (eventIdSync?.isNotEmpty() == true) {
-                eventSelectionQuery += " AND ($eventIdSyncQuery)"
+                eventSelectionQuery += " AND $eventIdSyncQuery"
             }
             val eventSortOrder = Events.DTSTART + " DESC LIMIT 1"
 

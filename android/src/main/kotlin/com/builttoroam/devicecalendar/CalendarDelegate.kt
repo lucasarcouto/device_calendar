@@ -418,7 +418,10 @@ fun retrieveEvent(calendarId: String, eventId: String?, eventIdSync: String?, pe
 
             val eventCursor = contentResolver?.query(eventsUri, EVENT_PROJECTION_RETRIEVE_EVENT, eventSelectionQuery, null, eventSortOrder)
 
-            println("<debug> eventCursor: " + eventCursor)
+            println("<debug> eventsUri: " + eventsUri)
+            println("<debug> EVENT_PROJECTION_RETRIEVE_EVENT: " + EVENT_PROJECTION_RETRIEVE_EVENT)
+            println("<debug> eventSelectionQuery: " + eventSelectionQuery)
+            println("<debug> eventSortOrder: " + eventSortOrder)
 
             var event: Event? = null
 

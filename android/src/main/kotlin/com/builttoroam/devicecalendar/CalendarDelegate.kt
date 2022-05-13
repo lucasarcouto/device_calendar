@@ -418,6 +418,8 @@ fun retrieveEvent(calendarId: String, eventId: String?, eventIdSync: String?, pe
 
             val eventCursor = contentResolver?.query(eventsUri, EVENT_PROJECTION_RETRIEVE_EVENT, eventSelectionQuery, null, eventSortOrder)
 
+            println("<debug> eventCursor: " + eventCursor)
+
             var event: Event? = null
 
             val exceptionHandler = CoroutineExceptionHandler { _, exception ->

@@ -448,6 +448,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
             eventStartDate: Int64(ekEvent.startDate.millisecondsSinceEpoch),
             eventEndDate: Int64(ekEvent.endDate.millisecondsSinceEpoch),
             eventStartTimeZone: ekEvent.timeZone?.identifier,
+            eventEndTimeZone: "eventEndTimeZone",
             eventAllDay: ekEvent.isAllDay,
             attendees: attendees,
             eventLocation: ekEvent.location,
@@ -456,13 +457,12 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
             organizer: convertEkParticipantToAttendee(ekParticipant: ekEvent.organizer),
             reminders: reminders,
             availability: convertEkEventAvailability(ekEventAvailability: ekEvent.availability),
-            eventEndTimeZone: "eventEndTimeZone",
             color: "color",
             deleted: "deleted")
 
         return event
     }
-    
+
     private func convertEkParticipantToAttendee(ekParticipant: EKParticipant?) -> Attendee? {
         if ekParticipant == nil || ekParticipant?.emailAddress == nil {
             return nil

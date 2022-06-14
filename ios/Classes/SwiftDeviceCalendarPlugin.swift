@@ -253,8 +253,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
                     accountName: ekCalendar.source.title,
                     accountType: getAccountType(ekCalendar.source.sourceType),
                     ownerAccount: "ownerAccount",
-                    visible: "visible",
-                    )
+                    visible: "visible")
                 calendars.append(calendar)
             }
             
@@ -455,12 +454,11 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
             organizer: convertEkParticipantToAttendee(ekParticipant: ekEvent.organizer),
             reminders: reminders,
             availability: convertEkEventAvailability(ekEventAvailability: ekEvent.availability),
-            eventSyncId: 'eventSyncId',
-            calendarSyncId: 'calendarSyncId',
-            eventEndTimeZone: 'eventEndTimeZone',
-            color: 'color',
-            deleted: 'deleted',
-        )
+            eventSyncId: "eventSyncId",
+            calendarSyncId: "calendarSyncId",
+            eventEndTimeZone: "eventEndTimeZone",
+            color: "color",
+            deleted: "deleted")
 
         return event
     }

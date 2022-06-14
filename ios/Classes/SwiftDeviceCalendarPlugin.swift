@@ -440,7 +440,9 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
         let recurrenceRule = parseEKRecurrenceRules(ekEvent)
         let event = Event(
             eventId: ekEvent.eventIdentifier,
+            eventSyncId: "eventSyncId",
             calendarId: calendarId,
+            calendarSyncId: "calendarSyncId",
             eventTitle: ekEvent.title ?? "New Event",
             eventDescription: ekEvent.notes,
             eventStartDate: Int64(ekEvent.startDate.millisecondsSinceEpoch),
@@ -454,9 +456,6 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
             organizer: convertEkParticipantToAttendee(ekParticipant: ekEvent.organizer),
             reminders: reminders,
             availability: convertEkEventAvailability(ekEventAvailability: ekEvent.availability),
-            calendarId: "calendarId",
-            eventSyncId: "eventSyncId",
-            calendarSyncId: "calendarSyncId",
             eventEndTimeZone: "eventEndTimeZone",
             color: "color",
             deleted: "deleted")

@@ -245,7 +245,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
             for ekCalendar in ekCalendars {
                 let calendar = Calendar(
                     id: ekCalendar.calendarIdentifier,
-                    syncId: ekCalendar.syncId,
+                    syncId: "syncId",
                     name: ekCalendar.title,
                     isReadOnly: !ekCalendar.allowsContentModifications,
                     isDefault: defaultCalendar?.calendarIdentifier == ekCalendar.calendarIdentifier,
@@ -454,6 +454,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
             organizer: convertEkParticipantToAttendee(ekParticipant: ekEvent.organizer),
             reminders: reminders,
             availability: convertEkEventAvailability(ekEventAvailability: ekEvent.availability),
+            calendarId: "calendarId",
             eventSyncId: "eventSyncId",
             calendarSyncId: "calendarSyncId",
             eventEndTimeZone: "eventEndTimeZone",

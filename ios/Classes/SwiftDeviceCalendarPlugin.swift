@@ -236,6 +236,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
         }
     }
     
+    // TODO
     private func retrieveCalendars(_ result: @escaping FlutterResult) {
         checkPermissionsThenExecute(permissionsGrantedAction: {
             let ekCalendars = self.eventStore.calendars(for: .event)
@@ -244,12 +245,16 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
             for ekCalendar in ekCalendars {
                 let calendar = Calendar(
                     id: ekCalendar.calendarIdentifier,
+                    syncId: ekCalendar.syncId,
                     name: ekCalendar.title,
                     isReadOnly: !ekCalendar.allowsContentModifications,
                     isDefault: defaultCalendar?.calendarIdentifier == ekCalendar.calendarIdentifier,
                     color: UIColor(cgColor: ekCalendar.cgColor).rgb()!,
                     accountName: ekCalendar.source.title,
-                    accountType: getAccountType(ekCalendar.source.sourceType))
+                    accountType: getAccountType(ekCalendar.source.sourceType),
+                    ownerAccount: "ownerAccount",
+                    visible: "visible",
+                    )
                 calendars.append(calendar)
             }
             
@@ -412,6 +417,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
         }, result: result)
     }
     
+    // TODO
     private func createEventFromEkEvent(calendarId: String, ekEvent: EKEvent) -> Event {
         var attendees = [Attendee]()
         if ekEvent.attendees != nil {
@@ -448,7 +454,12 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
             recurrenceRule: recurrenceRule,
             organizer: convertEkParticipantToAttendee(ekParticipant: ekEvent.organizer),
             reminders: reminders,
-            availability: convertEkEventAvailability(ekEventAvailability: ekEvent.availability)
+            availability: convertEkEventAvailability(ekEventAvailability: ekEvent.availability),
+            eventSyncId: 'eventSyncId',
+            calendarSyncId: 'calendarSyncId',
+            eventEndTimeZone: 'eventEndTimeZone',
+            color: 'color',
+            deleted: 'deleted',
         )
 
         return event

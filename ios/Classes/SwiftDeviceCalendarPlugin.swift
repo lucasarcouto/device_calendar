@@ -243,6 +243,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
             let defaultCalendar = self.eventStore.defaultCalendarForNewEvents
             var calendars = [Calendar]()
             for ekCalendar in ekCalendars {
+                print("<debug> ekCalendar: \(ekCalendar)")
                 let calendar = Calendar(
                     id: ekCalendar.calendarIdentifier,
                     syncId: "syncId",
@@ -360,6 +361,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
         }, result: result)
     }
     
+    // TODO
     private func retrieveEvent(_ call: FlutterMethodCall, _ result: @escaping FlutterResult) {
         checkPermissionsThenExecute(permissionsGrantedAction: {
             let arguments = call.arguments as! Dictionary<String, AnyObject>

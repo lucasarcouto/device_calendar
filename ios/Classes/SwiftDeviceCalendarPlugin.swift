@@ -236,25 +236,23 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
         }
     }
     
-    // TODO
     private func retrieveCalendars(_ result: @escaping FlutterResult) {
         checkPermissionsThenExecute(permissionsGrantedAction: {
             let ekCalendars = self.eventStore.calendars(for: .event)
             let defaultCalendar = self.eventStore.defaultCalendarForNewEvents
             var calendars = [Calendar]()
             for ekCalendar in ekCalendars {
-                print("<debug> ekCalendar: \(ekCalendar)")
                 let calendar = Calendar(
                     id: ekCalendar.calendarIdentifier,
-                    syncId: "syncId",
+                    syncId: "",
                     name: ekCalendar.title,
                     isReadOnly: !ekCalendar.allowsContentModifications,
                     isDefault: defaultCalendar?.calendarIdentifier == ekCalendar.calendarIdentifier,
                     color: UIColor(cgColor: ekCalendar.cgColor).rgb()!,
                     accountName: ekCalendar.source.title,
                     accountType: getAccountType(ekCalendar.source.sourceType),
-                    ownerAccount: "ownerAccount",
-                    visible: "visible")
+                    ownerAccount: "",
+                    visible: true)
                 calendars.append(calendar)
             }
             
@@ -420,6 +418,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
     
     // TODO
     private func createEventFromEkEvent(calendarId: String, ekEvent: EKEvent) -> Event {
+        print("<debug> ekEvent: \(ekEvent)")
         var attendees = [Attendee]()
         if ekEvent.attendees != nil {
             for ekParticipant in ekEvent.attendees! {

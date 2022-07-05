@@ -252,7 +252,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
                     accountName: ekCalendar.source.title,
                     accountType: getAccountType(ekCalendar.source.sourceType),
                     ownerAccount: "",
-                    visible: true)
+                    visible: "1")
                 calendars.append(calendar)
             }
             

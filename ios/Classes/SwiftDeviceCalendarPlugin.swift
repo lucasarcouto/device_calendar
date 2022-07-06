@@ -464,7 +464,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
         return event
     }
 
-    private func parseEventSyncId(eventId: String!) -> String? {
+    private func parseEventSyncId(eventId: String!) -> String {
         var firstParse = eventId.components(separatedBy: ":")
         var components = firstParse[1].components(separatedBy: "@")
         components = Array(components.dropLast())

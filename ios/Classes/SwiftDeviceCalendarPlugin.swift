@@ -418,7 +418,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
     
     // TODO
     private func createEventFromEkEvent(calendarId: String, ekEvent: EKEvent) -> Event {
-        print("<debug> ekEvent: \(ekEvent)")
+        print("<debug> ekEvent.endDate: \(ekEvent.endDate)")
         var attendees = [Attendee]()
         if ekEvent.attendees != nil {
             for ekParticipant in ekEvent.attendees! {
@@ -449,7 +449,7 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
             eventStartDate: Int64(ekEvent.startDate.millisecondsSinceEpoch),
             eventEndDate: Int64(ekEvent.endDate.millisecondsSinceEpoch),
             eventStartTimeZone: ekEvent.timeZone?.identifier,
-            eventEndTimeZone: ekEvent.endDate.timeZone?.identifier,
+            eventEndTimeZone: ekEvent.timeZone?.identifier,
             eventAllDay: ekEvent.isAllDay,
             attendees: attendees,
             eventLocation: ekEvent.location,

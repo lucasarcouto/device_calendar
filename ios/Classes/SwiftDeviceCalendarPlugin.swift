@@ -418,7 +418,6 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
     
     // TODO
     private func createEventFromEkEvent(calendarId: String, ekEvent: EKEvent) -> Event {
-        print("<debug> ekEvent.endDate: \(ekEvent.endDate)")
         var attendees = [Attendee]()
         if ekEvent.attendees != nil {
             for ekParticipant in ekEvent.attendees! {

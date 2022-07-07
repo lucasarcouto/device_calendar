@@ -443,13 +443,13 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
             eventId: ekEvent.eventIdentifier,
             eventSyncId: parseEventSyncId(eventId: ekEvent.eventIdentifier),
             calendarId: calendarId,
-            calendarSyncId: "calendarSyncId",
+            calendarSyncId: "",
             eventTitle: ekEvent.title ?? "New Event",
             eventDescription: ekEvent.notes,
             eventStartDate: Int64(ekEvent.startDate.millisecondsSinceEpoch),
             eventEndDate: Int64(ekEvent.endDate.millisecondsSinceEpoch),
             eventStartTimeZone: ekEvent.timeZone?.identifier,
-            eventEndTimeZone: "eventEndTimeZone",
+            eventEndTimeZone: ekEvent.endDate.timeZone?.identifier,
             eventAllDay: ekEvent.isAllDay,
             attendees: attendees,
             eventLocation: ekEvent.location,
@@ -458,8 +458,8 @@ public class SwiftDeviceCalendarPlugin: NSObject, FlutterPlugin, EKEventViewDele
             organizer: convertEkParticipantToAttendee(ekParticipant: ekEvent.organizer),
             reminders: reminders,
             availability: convertEkEventAvailability(ekEventAvailability: ekEvent.availability),
-            color: "color",
-            deleted: "deleted")
+            color: nil,
+            deleted: "0")
 
         return event
     }
